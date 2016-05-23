@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <cstdio>
 #include <cstring>
 using namespace std;
@@ -27,6 +29,24 @@ long long next()
 }
 int main()
 {
+    char * filename = (char *)calloc(20,sizeof(char));
+    FILE * fp;
+    long long Value;
+    int hValue;
+    int i, j;
+    int flag[500];
+    long long tempData[500][1000];
+
+    for(i=0; i<500; i++){
+            flag[i] = 0;
+    }
+
+    for(i=0; i<500; i++){
+        for(j = 0; j<1000; j++){
+            tempData[i][j] = 0;
+        }
+    }
+
 	for(int j=1;j<624;j++)
 	{
 		state[j] = (1812433253L * (state[j - 1] ^ (state[j - 1] >> 30)) + j);
@@ -34,7 +54,20 @@ int main()
 	}
 	for(long long  i=0;i<5000000000L;i++)
 	{
-		printf("%lld\n",next());
+        Value = next();
+        hValue = Value % 500;
+        tempData[hValue][flag[hValue]] = Value;
+        flag[hValue]++;
+        if(flag[hValue] == 1000){
+            sprintf(filename, "%d", hValue);
+            fp = fopen(filename, "a");
+            for(j = 0; j<1000; j++){
+                fprintf(fp, "%lld\n", tempData[hValue][j]);
+            }
+            flag[hValue] = 0;
+            fclose(fp);
+        }
+		//printf("%lld\n",next());
 	}
 	return 0;
 }
